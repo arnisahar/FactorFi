@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+}
+
+:root {
+  color-scheme: dark;
+  --background: oklch(0.16 0.018 214);
+  --foreground: oklch(0.96 0.014 93);
+  --card: oklch(0.205 0.019 214);
+  --card-foreground: oklch(0.96 0.014 93);
+  --popover: oklch(0.19 0.019 214);
+  --popover-foreground: oklch(0.96 0.014 93);
+  --primary: oklch(0.78 0.13 159);
+  --primary-foreground: oklch(0.13 0.018 214);
+  --secondary: oklch(0.27 0.022 218);
+  --secondary-foreground: oklch(0.93 0.013 100);
+  --muted: oklch(0.255 0.018 217);
+  --muted-foreground: oklch(0.71 0.027 96);
+  --accent: oklch(0.31 0.056 184);
+  --accent-foreground: oklch(0.95 0.016 108);
+  --destructive: oklch(0.68 0.19 24);
+  --border: oklch(0.35 0.022 216);
+  --input: oklch(0.32 0.021 216);
+  --ring: oklch(0.73 0.12 159);
+  --chart-1: oklch(0.78 0.13 159);
+  --chart-2: oklch(0.72 0.11 197);
+  --chart-3: oklch(0.81 0.11 84);
+  --chart-4: oklch(0.66 0.15 32);
+  --chart-5: oklch(0.7 0.12 270);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    min-width: 320px;
+  }
+}
+
+@layer utilities {
+  .bg-background {
+    background:
+      linear-gradient(135deg, oklch(0.21 0.024 214 / 42%), transparent 36rem),
+      radial-gradient(circle at 80% 5%, oklch(0.45 0.08 160 / 22%), transparent 32rem),
+      var(--background);
+  }
+}

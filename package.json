@@ -1,0 +1,14 @@
+{
+  "name": "factorfi",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --dir web dev",
+    "build": "pnpm --dir web build",
+    "preview": "pnpm --dir web preview",
+    "move:build": "sui move build --path contracts/factorfi",
+    "move:test": "sui move test --path contracts/factorfi",
+    "deploy:testnet": "./scripts/deploy-testnet.sh"
+  }
+}
