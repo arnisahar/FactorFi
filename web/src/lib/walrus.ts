@@ -54,9 +54,3 @@ export async function uploadInvoiceToWalrus(file: File): Promise<WalrusUploadRes
     raw,
   };
 }
-
-export function createInvoicePdfBlob(invoiceText: string) {
-  return new File([invoiceText], `factorfi-invoice-${Date.now()}.txt`, {
-    type: "text/plain",
-  });
-}

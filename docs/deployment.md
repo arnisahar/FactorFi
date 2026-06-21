@@ -2,15 +2,16 @@
 
 ## Deployed Testnet IDs
 
-- Package ID: `0xdff33338fe2f5b320ae2f8f466c7840eb7049ad1084ebb8528e987a7d13c69ff`
+- Current package ID (v2): `0xef7fd6911233652300be893c6fa265f85d8fd9cc48852a9b91f32508daca6a68`
+- Original package/type origin: `0xdff33338fe2f5b320ae2f8f466c7840eb7049ad1084ebb8528e987a7d13c69ff`
 - Publish digest: `CLx7aHKKFyoCzmWgGga15cvMTQeMqwwQZi8YHdguS53T`
+- Upgrade digest: `2gQWUvxSXLRxW1dUcSyyBdBig4ZmuaqH9MmhTLFsRtkB`
 - Upgrade cap: `0x79a78685d06968fe9ad685f8d2915c610355469dbadd3883e46e98638c680566`
 - DUSDC lending pool: `0x8475f0b62959bd0e4f384832af88b9cafc01837dee818ddad8801e48cd2a2639`
 - Pool create digest: `Trn2pNjiKaCmdjzn65LjhS9krBzjbYBSoTGWancdgC7`
 - Quote coin type: `0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC`
-- Demo invoice object: `0x7bfd9cd93c8128cc158270f310ed7b0d5b06e1e0055d3926bb9dd32e2a8aa66e`
-- Demo invoice mint digest: `5JSTevnu9cKJTqXAVGf9AWMWcPPUPXi6fDrT5ZRQCPUx`
-- Demo invoice list digest: `3WYjMwgtEHW1me4HMSv87FmRX5rNhnVFce8npgGNktd3`
+- Live shared invoice object: `0x099d47492d14803e3937e80f98057f09072408ec86e459474f90e55544c8db4f`
+- Live invoice mint digest: `EAMb4BwwxdP9dC2eho28A4PVgJwViX7DQ3SmEzLCqfne`
 - Demo Walrus blob: `zKWy6x8did0_8q0b0knIWvObve9e1UM4YKGSFAq3UH0`
 
 ## Prerequisites
@@ -67,7 +68,7 @@ Restart the Vite dev server after changing `.env`.
 
 ## DUSDC Liquidity
 
-The shared pool currently exists but is empty. The active CLI address has SUI and no DUSDC. DeepBook Predict DUSDC is requested through the official form:
+The shared pool has received 5 DUSDC. Package v2 mints listed invoices as shared objects so a lender wallet can fund them. The live micro-invoice requires a 4.5 DUSDC advance and its funding call has passed an on-chain dry run.
 
 ```text
 https://tally.so/r/Xx102L

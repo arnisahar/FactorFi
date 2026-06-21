@@ -10,7 +10,7 @@ function Card({
     <div
       ref={ref}
       className={cn(
-        "min-w-0 rounded-xl border bg-card text-card-foreground shadow",
+        "min-w-0 rounded-lg border bg-card text-card-foreground shadow-[0_1px_2px_rgba(23,32,51,0.04),0_8px_24px_rgba(23,32,51,0.04)]",
         className,
       )}
       {...props}

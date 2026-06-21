@@ -26,7 +26,7 @@ export async function buildMintInvoiceTransaction(input: InvoiceTxInput) {
 
   const tx = new Transaction();
   tx.moveCall({
-    target: `${packageId}::invoice_finance::mint_invoice`,
+    target: `${packageId}::invoice_finance::mint_listed_invoice`,
     arguments: [
       tx.pure.u64(toQuoteUnits(input.invoice.amount).toString()),
       tx.pure.u64(Date.now() + input.invoice.dueInDays * 24 * 60 * 60 * 1_000),
@@ -37,16 +37,6 @@ export async function buildMintInvoiceTransaction(input: InvoiceTxInput) {
     ],
   });
 
-  return tx;
-}
-
-export function buildListInvoiceTransaction(invoiceObjectId: string, packageId = FACTORFI_PLACEHOLDERS.packageId) {
-  assertPackageId(packageId);
-  const tx = new Transaction();
-  tx.moveCall({
-    target: `${packageId}::invoice_finance::list_invoice`,
-    arguments: [tx.object(invoiceObjectId)],
-  });
   return tx;
 }
 
@@ -66,20 +56,24 @@ export function buildCreatePoolTransaction(
 export function buildDepositTransaction({
   poolObjectId,
   coinObjectId,
+  amount,
   coinType = FACTORFI_PLACEHOLDERS.quoteCoinType,
   packageId = FACTORFI_PLACEHOLDERS.packageId,
 }: {
   poolObjectId: string;
   coinObjectId: string;
+  amount: number;
   coinType?: string;
   packageId?: string;
 }) {
   assertPackageId(packageId);
   const tx = new Transaction();
+  const sourceCoin = tx.object(coinObjectId);
+  const [depositCoin] = tx.splitCoins(sourceCoin, [tx.pure.u64(toQuoteUnits(amount))]);
   tx.moveCall({
     target: `${packageId}::invoice_finance::deposit`,
     typeArguments: [coinType],
-    arguments: [tx.object(poolObjectId), tx.object(coinObjectId)],
+    arguments: [tx.object(poolObjectId), depositCoin],
   });
   return tx;
 }
@@ -108,25 +102,38 @@ export function buildFundInvoiceTransaction({
 export function buildSettleInvoiceTransaction({
   poolObjectId,
   invoiceObjectId,
-  repaymentCoinObjectId,
+  repaymentCoinObjectIds,
+  repaymentAmount,
   coinType = FACTORFI_PLACEHOLDERS.quoteCoinType,
   packageId = FACTORFI_PLACEHOLDERS.packageId,
 }: {
   poolObjectId: string;
   invoiceObjectId: string;
-  repaymentCoinObjectId: string;
+  repaymentCoinObjectIds: string[];
+  repaymentAmount: number;
   coinType?: string;
   packageId?: string;
 }) {
   assertPackageId(packageId);
+  if (!repaymentCoinObjectIds.length) {
+    throw new Error("At least one DUSDC coin is required for settlement.");
+  }
   const tx = new Transaction();
+  const sourceCoin = tx.object(repaymentCoinObjectIds[0]);
+  if (repaymentCoinObjectIds.length > 1) {
+    tx.mergeCoins(
+      sourceCoin,
+      repaymentCoinObjectIds.slice(1).map((coinObjectId) => tx.object(coinObjectId)),
+    );
+  }
+  const [repaymentCoin] = tx.splitCoins(sourceCoin, [tx.pure.u64(toQuoteUnits(repaymentAmount))]);
   tx.moveCall({
     target: `${packageId}::invoice_finance::settle_invoice`,
     typeArguments: [coinType],
     arguments: [
       tx.object(poolObjectId),
       tx.object(invoiceObjectId),
-      tx.object(repaymentCoinObjectId),
+      repaymentCoin,
     ],
   });
   return tx;

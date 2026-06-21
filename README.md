@@ -6,9 +6,10 @@ FactorFi lets a business upload an invoice PDF to Walrus, mint an invoice token 
 
 ## Structure
 
-- `web`: React, Vite, Tailwind v4, shadcn, Sui dApp Kit, Zustand demo app.
+- `web`: React, Vite, Tailwind v4, shadcn, Sui dApp Kit, and live testnet workspace.
 - `contracts/factorfi`: Move package for invoice objects and a generic lending pool.
 - `docs`: hackathon research, architecture, and execution plan.
+- `output/pdf`: upload-ready FactorFi demo invoice.
 
 ## Commands
 
@@ -16,6 +17,16 @@ FactorFi lets a business upload an invoice PDF to Walrus, mint an invoice token 
 pnpm --dir web install
 pnpm dev
 pnpm build
+```
+
+The public landing page is served at `/`; the financing workspace is served at
+`/app`. The landing page and borrower desk both expose the generated 5 DUSDC
+demo invoice.
+
+Regenerate the demo invoice after changing its source with:
+
+```bash
+python3 scripts/create-demo-invoice.py
 ```
 
 Move build requires the Sui CLI:
@@ -34,4 +45,4 @@ pnpm move:test
 
 ## Deployment Status
 
-The Move package is published on Sui Testnet and a shared DUSDC lending pool exists. The pool still needs DUSDC deposits for live funding transactions. See [docs/deployment.md](/Users/adilhusain/Downloads/FactorFi/docs/deployment.md).
+The Move package is published on Sui Testnet and a shared DUSDC lending pool exists. The pool still needs DUSDC deposits for live funding transactions. See [docs/deployment.md](docs/deployment.md).

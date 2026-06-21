@@ -1,5 +1,6 @@
 import type { SuiGrpcClient } from "@mysten/sui/grpc";
-import { FACTORFI_PLACEHOLDERS } from "@/lib/protocol";
+import { FACTORFI_PLACEHOLDERS, WALRUS } from "@/lib/protocol";
+import type { InvoiceMetadata, InvoicePosition, InvoiceStatus } from "@/types/factorfi";
 
 export type PoolSnapshot = {
   objectId: string;
@@ -19,11 +20,14 @@ export type CoinSnapshot = {
   digest: string;
 };
 
-export async function fetchPoolSnapshot(client: SuiGrpcClient): Promise<PoolSnapshot | null> {
-  if (!FACTORFI_PLACEHOLDERS.poolObjectId) return null;
+export async function fetchPoolSnapshot(
+  client: SuiGrpcClient,
+  poolObjectId: string,
+): Promise<PoolSnapshot | null> {
+  if (!poolObjectId) return null;
 
   const { object } = await client.getObject({
-    objectId: FACTORFI_PLACEHOLDERS.poolObjectId,
+    objectId: poolObjectId,
     include: { json: true, previousTransaction: true },
   });
 
@@ -40,6 +44,60 @@ export async function fetchPoolSnapshot(client: SuiGrpcClient): Promise<PoolSnap
     version: object.version,
     previousTransaction: object.previousTransaction,
   };
+}
+
+const STATUS_BY_CODE: Record<number, InvoiceStatus> = {
+  0: "draft",
+  1: "listed",
+  2: "funded",
+  3: "settled",
+};
+
+export async function fetchInvoiceSnapshots(
+  client: SuiGrpcClient,
+  objectIds: string[],
+  metadata: Record<string, InvoiceMetadata>,
+): Promise<InvoicePosition[]> {
+  if (!objectIds.length) return [];
+
+  const { objects } = await client.getObjects({
+    objectIds,
+    include: { json: true, previousTransaction: true },
+  });
+
+  return objects.flatMap((object) => {
+    if (object instanceof Error || !object.json) return [];
+    const json = object.json;
+    const amount = Number(json.amount ?? 0) / 1_000_000;
+    const advanceRateBps = Number(json.advance_bps ?? 0);
+    const discountBps = Number(json.discount_bps ?? 0);
+    const dueMs = Number(json.due_ms ?? Date.now());
+    const dueInDays = Math.max(1, Math.ceil((dueMs - Date.now()) / 86_400_000));
+    const principal = (amount * advanceRateBps) / 10_000;
+    const fee = (amount * discountBps) / 10_000;
+    const expectedAprBps = principal > 0
+      ? Math.round((fee / principal) * (365 / dueInDays) * 10_000)
+      : 0;
+    const walrusBlobId = String(json.walrus_blob_id ?? "");
+    const storedMetadata = metadata[object.objectId];
+
+    return [{
+      id: `INV-${object.objectId.slice(2, 8).toUpperCase()}`,
+      borrower: String(json.borrower ?? ""),
+      debtor: storedMetadata?.debtor ?? "Private debtor hash",
+      amount,
+      advanceRateBps,
+      discountBps,
+      expectedAprBps,
+      dueInDays,
+      counterpartyGrade: storedMetadata?.counterpartyGrade ?? "B",
+      walrusBlobId,
+      walrusUrl: walrusBlobId ? `${WALRUS.aggregatorUrl}/v1/blobs/${walrusBlobId}` : undefined,
+      objectId: object.objectId,
+      txDigest: object.previousTransaction ?? undefined,
+      status: STATUS_BY_CODE[Number(json.status ?? 0)] ?? "defaulted",
+    }];
+  });
 }
 
 export async function fetchOwnedQuoteCoins(client: SuiGrpcClient, owner: string): Promise<CoinSnapshot[]> {

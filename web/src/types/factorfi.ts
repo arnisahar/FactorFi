@@ -16,7 +16,6 @@ export type InvoicePosition = {
   discountBps: number;
   expectedAprBps: number;
   dueInDays: number;
-  riskScore: number;
   counterpartyGrade: CounterpartyGrade;
   walrusBlobId: string;
   walrusUrl?: string;
@@ -31,17 +30,13 @@ export type DraftInvoice = {
   amount: number;
   dueInDays: number;
   counterpartyGrade: CounterpartyGrade;
-  note: string;
   walrusBlobId?: string;
   walrusUrl?: string;
   txDigest?: string;
   objectId?: string;
 };
 
-export type LenderPosition = {
-  lender: string;
-  invoiceId: string;
-  principal: number;
-  expectedReturn: number;
-  exposureBps: number;
+export type InvoiceMetadata = {
+  debtor: string;
+  counterpartyGrade: CounterpartyGrade;
 };

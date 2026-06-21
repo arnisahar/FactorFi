@@ -8,7 +8,7 @@ const GRPC_URLS = {
 };
 
 export const dAppKit = createDAppKit({
-  enableBurnerWallet: import.meta.env.DEV,
+  enableBurnerWallet: false,
   slushWalletConfig: null,
   networks: ["mainnet", "testnet", "devnet"],
   defaultNetwork: "testnet",

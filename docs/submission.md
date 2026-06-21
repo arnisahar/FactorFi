@@ -6,11 +6,11 @@
 - Description: On-chain invoice financing on Sui. Businesses upload invoice documents to Walrus, mint invoice-right objects, receive DUSDC advances from lender liquidity, and settle principal plus fees when the invoice is paid.
 - Track: DeFi & Payments, with DeepBook and Walrus sponsor relevance.
 - Deployment: Sui Testnet.
-- Package ID: `0xdff33338fe2f5b320ae2f8f466c7840eb7049ad1084ebb8528e987a7d13c69ff`
-- Pool Object ID: `0x8475f0b62959bd0e4f384832af88b9cafc01837dee818ddad8801e48cd2a2639`
-- Demo Invoice Object ID: `0x7bfd9cd93c8128cc158270f310ed7b0d5b06e1e0055d3926bb9dd32e2a8aa66e`
-- Demo Walrus Blob ID: `zKWy6x8did0_8q0b0knIWvObve9e1UM4YKGSFAq3UH0`
-- Website: local demo ready; deploy to Vercel/Netlify after `.env.local` IDs are set.
+- Package ID (v2): `0xef7fd6911233652300be893c6fa265f85d8fd9cc48852a9b91f32508daca6a68`
+- Pool Object ID: record the fresh pool created during the final run.
+- Demo Invoice Object ID: record the fresh invoice created during the final run.
+- Demo Walrus Blob ID: record the blob returned during the final run.
+- Website: local demo ready; Vercel config is included at the repository root.
 
 ## Demo Video Outline, 5 Minutes
 
@@ -33,7 +33,7 @@
 
 ## Remaining Submission Tasks
 
-- Request DeepBook Predict DUSDC and seed the shared pool.
+- Complete the clean live flow in `docs/demo-script.md` and record the resulting object IDs.
 - Deploy web app.
-- Record demo video.
+- Record demo video using `docs/demo-script.md`.
 - Make repository public for judging.

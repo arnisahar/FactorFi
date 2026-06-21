@@ -22,9 +22,11 @@ export function calculateOffer(invoice: DraftInvoice) {
     Math.round(GRADE_RISK[invoice.counterpartyGrade] * maturityFactor),
   );
   const advanceRateBps = riskScore > 50 ? 8_500 : riskScore > 30 ? 8_800 : 9_200;
-  const advanceAmount = Math.round((invoice.amount * advanceRateBps) / 10_000);
-  const fee = Math.round((invoice.amount * discountBps) / 10_000);
-  const expectedAprBps = Math.round((fee / advanceAmount) * (365 / invoice.dueInDays) * 10_000);
+  const advanceAmount = (invoice.amount * advanceRateBps) / 10_000;
+  const fee = (invoice.amount * discountBps) / 10_000;
+  const expectedAprBps = advanceAmount > 0
+    ? Math.round((fee / advanceAmount) * (365 / Math.max(invoice.dueInDays, 1)) * 10_000)
+    : 0;
 
   return {
     advanceAmount,
@@ -40,7 +42,8 @@ export function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format(value);
 }
 

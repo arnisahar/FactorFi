@@ -1,13 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/newsreader";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Newsreader Variable", ui-serif, Georgia, serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -38,31 +39,31 @@
 }
 
 :root {
-  color-scheme: dark;
-  --background: oklch(0.16 0.018 214);
-  --foreground: oklch(0.96 0.014 93);
-  --card: oklch(0.205 0.019 214);
-  --card-foreground: oklch(0.96 0.014 93);
-  --popover: oklch(0.19 0.019 214);
-  --popover-foreground: oklch(0.96 0.014 93);
-  --primary: oklch(0.78 0.13 159);
-  --primary-foreground: oklch(0.13 0.018 214);
-  --secondary: oklch(0.27 0.022 218);
-  --secondary-foreground: oklch(0.93 0.013 100);
-  --muted: oklch(0.255 0.018 217);
-  --muted-foreground: oklch(0.71 0.027 96);
-  --accent: oklch(0.31 0.056 184);
-  --accent-foreground: oklch(0.95 0.016 108);
-  --destructive: oklch(0.68 0.19 24);
-  --border: oklch(0.35 0.022 216);
-  --input: oklch(0.32 0.021 216);
-  --ring: oklch(0.73 0.12 159);
-  --chart-1: oklch(0.78 0.13 159);
-  --chart-2: oklch(0.72 0.11 197);
-  --chart-3: oklch(0.81 0.11 84);
-  --chart-4: oklch(0.66 0.15 32);
-  --chart-5: oklch(0.7 0.12 270);
-  --radius: 0.5rem;
+  color-scheme: light;
+  --background: oklch(0.965 0.006 155);
+  --foreground: oklch(0.25 0.035 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.035 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.035 260);
+  --primary: oklch(0.55 0.2 262);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.93 0.013 255);
+  --secondary-foreground: oklch(0.29 0.04 260);
+  --muted: oklch(0.95 0.008 250);
+  --muted-foreground: oklch(0.53 0.03 255);
+  --accent: oklch(0.93 0.035 158);
+  --accent-foreground: oklch(0.34 0.08 157);
+  --destructive: oklch(0.58 0.22 28);
+  --border: oklch(0.86 0.015 250);
+  --input: oklch(0.82 0.02 250);
+  --ring: oklch(0.55 0.2 262);
+  --chart-1: oklch(0.55 0.2 262);
+  --chart-2: oklch(0.65 0.16 158);
+  --chart-3: oklch(0.78 0.15 82);
+  --chart-4: oklch(0.62 0.16 31);
+  --chart-5: oklch(0.55 0.1 225);
+  --radius: 0.4rem;
 }
 
 @layer base {
@@ -72,19 +73,62 @@
 
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-screen bg-background text-foreground antialiased;
     min-width: 320px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    letter-spacing: 0;
   }
 }
 
 @layer utilities {
-  .bg-background {
-    background:
-      linear-gradient(135deg, oklch(0.21 0.024 214 / 42%), transparent 36rem),
-      radial-gradient(circle at 80% 5%, oklch(0.45 0.08 160 / 22%), transparent 32rem),
-      var(--background);
+  .workspace-page {
+    background: #f3f5f4;
+  }
+
+  .landing-hero h1,
+  .landing-hero p,
+  .landing-hero a {
+    animation: landing-reveal 520ms ease-out both;
+  }
+
+  .landing-hero p {
+    animation-delay: 80ms;
+  }
+
+  .landing-hero a {
+    animation-delay: 140ms;
+  }
+}
+
+@keyframes landing-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .landing-hero h1,
+  .landing-hero p,
+  .landing-hero a {
+    animation: none;
   }
 }

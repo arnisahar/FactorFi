@@ -133,6 +133,44 @@ entry fun mint_invoice(
     transfer::transfer(invoice, borrower);
 }
 
+entry fun mint_listed_invoice(
+    amount: u64,
+    due_ms: u64,
+    debtor_hash: vector<u8>,
+    walrus_blob_id: String,
+    advance_bps: u64,
+    discount_bps: u64,
+    ctx: &mut TxContext,
+) {
+    assert!(amount > 0, E_BAD_AMOUNT);
+    assert!(advance_bps <= 10_000, E_BAD_AMOUNT);
+    assert!(discount_bps <= 10_000, E_BAD_AMOUNT);
+
+    let borrower = tx_context::sender(ctx);
+    let invoice = Invoice {
+        id: object::new(ctx),
+        amount,
+        due_ms,
+        borrower,
+        debtor_hash,
+        walrus_blob_id,
+        status: STATUS_LISTED,
+        advance_bps,
+        discount_bps,
+        funded_principal: 0,
+        expected_fee: 0,
+    };
+
+    event::emit(InvoiceMinted {
+        invoice_id: object::uid_to_address(&invoice.id),
+        borrower,
+        amount,
+        due_ms,
+    });
+
+    transfer::share_object(invoice);
+}
+
 entry fun list_invoice(invoice: &mut Invoice, ctx: &TxContext) {
     assert!(tx_context::sender(ctx) == invoice.borrower, E_NOT_OWNER);
     assert!(invoice.status == STATUS_DRAFT, E_BAD_STATUS);
@@ -276,6 +314,30 @@ fun invoice_can_be_listed() {
     assert!(status(&invoice) == STATUS_LISTED, 1);
 
     destroy_invoice_for_testing(invoice);
+}
+
+#[test]
+fun listed_invoice_is_shared() {
+    let borrower = @0xA;
+    let lender = @0xB;
+    let mut scenario = sui::test_scenario::begin(borrower);
+
+    mint_listed_invoice(
+        5_000_000,
+        1_806_000_000_000,
+        b"debtor",
+        std::string::utf8(b"test-walrus-blob"),
+        9_000,
+        700,
+        scenario.ctx(),
+    );
+
+    scenario.next_tx(lender);
+    let invoice = scenario.take_shared<Invoice>();
+    assert!(status(&invoice) == STATUS_LISTED, 0);
+    assert!(invoice.borrower == borrower, 1);
+    sui::test_scenario::return_shared(invoice);
+    scenario.end();
 }
 
 #[test]
