@@ -36,6 +36,21 @@ pnpm move:build
 pnpm move:test
 ```
 
+## Testnet Configuration
+
+Copy `web/.env.example` to `web/.env`. The checked-in example points at the
+current verified deployment:
+
+```dotenv
+VITE_FACTORFI_PACKAGE_ID=0x77224e501af0e7a0108c8300a428d228fac2502b6c59b1f90220bfd24b4f747e
+VITE_FACTORFI_POOL_OBJECT_ID=0x89b3c6a9deb018d5d2133249475fcd46cb27e409151d8826aaab345889e0473c
+VITE_FACTORFI_QUOTE_COIN_TYPE=0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC
+```
+
+Restart Vite whenever these values change. The package and pool can be
+inspected on [SuiScan](https://suiscan.xyz/testnet/object/0x77224e501af0e7a0108c8300a428d228fac2502b6c59b1f90220bfd24b4f747e)
+and [SuiVision](https://suivision.xyz/testnet/object/0x89b3c6a9deb018d5d2133249475fcd46cb27e409151d8826aaab345889e0473c).
+
 ## Current Integration Targets
 
 - Network: Sui Testnet
@@ -45,4 +60,9 @@ pnpm move:test
 
 ## Deployment Status
 
-The Move package is published on Sui Testnet and a shared DUSDC lending pool exists. The pool still needs DUSDC deposits for live funding transactions. See [docs/deployment.md](docs/deployment.md).
+The current Move package and shared DUSDC lending pool are live on Sui
+Testnet. The recorded demo deposited 7 DUSDC, financed one 4.6 DUSDC advance,
+and settled with a 0.1365 DUSDC fee. The pool now has 7.1365 DUSDC with zero
+outstanding principal. See [deployment details](docs/deployment.md), the
+[clean demo flow](docs/demo-script.md), and the
+[timed pitch voiceover](docs/pitch-voiceover.md).

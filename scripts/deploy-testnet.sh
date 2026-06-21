@@ -16,5 +16,11 @@ sui client balance
 echo "Building Move package..."
 sui move build --path "$PACKAGE_DIR"
 
+ACTIVE_ENV="$(sui client active-env | tr -d '"' | tr -d '[:space:]')"
+CHAIN_ID="$(sui client chain-identifier | tr -d '[:space:]')"
+
 echo "Publishing package to testnet..."
-sui client publish "$PACKAGE_DIR" --gas-budget 100000000 --json
+PUBFILE_PATH="$(mktemp)"
+trap 'rm -f "$PUBFILE_PATH"' EXIT
+printf 'chain-id = "%s"\nbuild-env = "%s"\n' "$CHAIN_ID" "$ACTIVE_ENV" > "$PUBFILE_PATH"
+sui client test-publish "$PACKAGE_DIR" --gas-budget 100000000 --pubfile-path "$PUBFILE_PATH" --json

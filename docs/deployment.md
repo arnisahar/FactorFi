@@ -2,17 +2,23 @@
 
 ## Deployed Testnet IDs
 
-- Current package ID (v2): `0xef7fd6911233652300be893c6fa265f85d8fd9cc48852a9b91f32508daca6a68`
-- Original package/type origin: `0xdff33338fe2f5b320ae2f8f466c7840eb7049ad1084ebb8528e987a7d13c69ff`
-- Publish digest: `CLx7aHKKFyoCzmWgGga15cvMTQeMqwwQZi8YHdguS53T`
-- Upgrade digest: `2gQWUvxSXLRxW1dUcSyyBdBig4ZmuaqH9MmhTLFsRtkB`
-- Upgrade cap: `0x79a78685d06968fe9ad685f8d2915c610355469dbadd3883e46e98638c680566`
-- DUSDC lending pool: `0x8475f0b62959bd0e4f384832af88b9cafc01837dee818ddad8801e48cd2a2639`
-- Pool create digest: `Trn2pNjiKaCmdjzn65LjhS9krBzjbYBSoTGWancdgC7`
+- Current package ID: `0x77224e501af0e7a0108c8300a428d228fac2502b6c59b1f90220bfd24b4f747e`
+- Original package/type origin: `0x77224e501af0e7a0108c8300a428d228fac2502b6c59b1f90220bfd24b4f747e`
+- Package version: `1`
+- Publish digest: `BoFJgtWCvbKbcb7X6sq1FTWw1XHkmzLihZsYx1dBwUMA`
+- Upgrade cap: `0x4668dc225a83b4124bb04c8eb767308344420372f53ee518373696e5fd3a4fee`
+- DUSDC lending pool: `0x89b3c6a9deb018d5d2133249475fcd46cb27e409151d8826aaab345889e0473c`
 - Quote coin type: `0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC`
-- Live shared invoice object: `0x099d47492d14803e3937e80f98057f09072408ec86e459474f90e55544c8db4f`
-- Live invoice mint digest: `EAMb4BwwxdP9dC2eho28A4PVgJwViX7DQ3SmEzLCqfne`
-- Demo Walrus blob: `zKWy6x8did0_8q0b0knIWvObve9e1UM4YKGSFAq3UH0`
+- Package publisher: `0x8c3ae4eb26b2b21d6fbeb24d202102fb1e17b33400fe9ba8a227d15716d25bb0`
+- Pool owner: `0xaf22509b046c0bed5f6c2fbc40cc06836f0e9b546b0bca95a488e4d980c466fa`
+
+The package and pool were queried from Sui testnet on 21 June 2026. The pool is
+a shared `LendingPool<DUSDC>` with the following post-demo state:
+
+- Total deposited: `7.000000 DUSDC`
+- Available balance: `7.136500 DUSDC`
+- Funded invoices: `1`
+- Outstanding principal: `0 DUSDC`
 
 ## Prerequisites
 
@@ -40,14 +46,18 @@ https://faucet.sui.io/?address=0x8c3ae4eb26b2b21d6fbeb24d202102fb1e17b33400fe9ba
 ./scripts/deploy-testnet.sh
 ```
 
-After publish, copy the new package ID to `web/.env`:
+If the package has already been published to testnet, the script now uses `sui client test-publish` with an ephemeral publication file so it can rerun without requiring manual removal of the existing `published.testnet` entry.
+
+For the current deployment, copy the example environment file:
 
 ```bash
 cp web/.env.example web/.env
 ```
 
-```text
-VITE_FACTORFI_PACKAGE_ID=<published_package_id>
+```dotenv
+VITE_FACTORFI_PACKAGE_ID=0x77224e501af0e7a0108c8300a428d228fac2502b6c59b1f90220bfd24b4f747e
+VITE_FACTORFI_POOL_OBJECT_ID=0x89b3c6a9deb018d5d2133249475fcd46cb27e409151d8826aaab345889e0473c
+VITE_FACTORFI_QUOTE_COIN_TYPE=0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC
 ```
 
 ## Create Pool
@@ -58,7 +68,7 @@ After the package is published, use the app or transaction builder to call:
 <PACKAGE_ID>::invoice_finance::create_pool<DUSDC>()
 ```
 
-Set the resulting shared pool object:
+For a future deployment, set the resulting shared pool object:
 
 ```text
 VITE_FACTORFI_POOL_OBJECT_ID=<shared_pool_object_id>
@@ -68,7 +78,14 @@ Restart the Vite dev server after changing `.env`.
 
 ## DUSDC Liquidity
 
-The shared pool has received 5 DUSDC. Package v2 mints listed invoices as shared objects so a lender wallet can fund them. The live micro-invoice requires a 4.5 DUSDC advance and its funding call has passed an on-chain dry run.
+The current pool completed the clean demo lifecycle with real testnet DUSDC:
+
+1. Deposit `7 DUSDC` from a wallet holding `10 DUSDC`.
+2. Fund a `5 DUSDC` face-value invoice with a `4.6 DUSDC` advance.
+3. Settle `4.7365 DUSDC` back to the pool.
+4. Finish with `7.1365 DUSDC` available and zero outstanding principal.
+
+Additional DUSDC test assets can be requested from DeepBook Predict:
 
 ```text
 https://tally.so/r/Xx102L

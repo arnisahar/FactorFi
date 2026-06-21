@@ -42,26 +42,18 @@ flowchart LR
 - Sui wallet and client: `@mysten/dapp-kit-react`, `@mysten/sui`
 - Storage: `@mysten/walrus`
 - Market infrastructure: `@mysten/deepbook-v3`
-- State: `zustand`
+- Routing: `react-router-dom`
+- Server state: `@tanstack/react-query`
+- Demo workspace registry: browser local storage; authoritative financial state is reloaded from Sui
 - UI: `tailwindcss`, `shadcn`, `lucide-react`
 - Forms: `react-hook-form`, `zod`
-
-## Near-Term Implementation Plan
-
-1. Complete the deterministic local demo path.
-2. Install Sui CLI and compile the Move package.
-3. Add Move unit tests for status transitions and pool accounting.
-4. Add transaction builders in `web/src/lib/transactions.ts`.
-5. Add Walrus upload implementation with testnet publisher or upload relay.
-6. Deploy package to Sui Testnet and record package/pool IDs.
-7. Replace placeholder package constants in `web/src/lib/protocol.ts`.
-8. Add demo video script and submission metadata.
 
 ## Implemented Status
 
 - React dApp dashboard is implemented with borrower, lender, and risk views.
 - Walrus HTTP upload is implemented through the testnet publisher.
 - Sui transaction builders are implemented for mint, list, create pool, deposit, fund, and settle.
-- Wallet-signed app actions are wired for mint, pool creation, and funding when deployment IDs are configured.
+- Wallet-signed app actions are wired for pool creation, deposit, mint, funding, and settlement.
 - Move tests cover invoice listing and fund/settle accounting.
-- Testnet package and shared DUSDC pool are deployed. The pool still needs DUSDC liquidity for live fund transactions.
+- The current testnet package is `0x77224e…f747e` and the shared DUSDC pool is `0x89b3c6…473c`.
+- The recorded end-to-end demo deposited 7 DUSDC, funded a 4.6 DUSDC advance, and settled the pool at 7.1365 DUSDC with no outstanding principal.
